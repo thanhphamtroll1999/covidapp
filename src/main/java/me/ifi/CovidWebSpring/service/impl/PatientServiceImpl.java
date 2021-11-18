@@ -1,13 +1,15 @@
 package me.ifi.CovidWebSpring.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.ifi.CovidWebSpring.model.Patient;
 import me.ifi.CovidWebSpring.repository.PatientRepository;
 import me.ifi.CovidWebSpring.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,7 +19,14 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<Patient> getListPatients() {
-       return patientRepository.findAll();
+        List<Patient> patientList = patientRepository.findAll();
+        try {
+            avatarArr(patientList);
+            return patientList;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -26,11 +35,20 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public void createNewPatient(Patient patient){
+    public void createNewPatient(Patient patient) {
+        File file1 = new File(new SimpleDateFormat("yyyy-mm-dd").format(new Date()) + ".json");
+        try (FileWriter file = new FileWriter(file1)) {
+            String jsonStr = patient.getAvatar();
+            file.write(jsonStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        patient.setAvatar(file1.getAbsolutePath());
         patientRepository.save(patient);
     }
 
-    @Override
+        @Override
     public void updatePatient(long id, Patient patientUpdate) {
         Patient patient = patientRepository.findPatientById(id);
         if(patient != null){
@@ -55,5 +73,18 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<Patient> getListPatientsSearch(String keyword) {
         return patientRepository.search(keyword);
+    }
+
+    @Override
+    public List<Patient> avatarArr(List<Patient> list) throws IOException {
+        for(Patient p : list){
+            String url = p.getAvatar();
+
+            FileReader fileReader = new FileReader(url);
+            BufferedReader br = new BufferedReader(fileReader);
+            String avatar = br.readLine();
+            p.setAvatar(avatar);
+        }
+        return list;
     }
 }

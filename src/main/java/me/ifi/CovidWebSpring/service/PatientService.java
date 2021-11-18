@@ -1,8 +1,9 @@
 package me.ifi.CovidWebSpring.service;
 
 import me.ifi.CovidWebSpring.model.Patient;
-import org.springframework.http.ResponseEntity;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 public interface PatientService {
@@ -12,4 +13,5 @@ public interface PatientService {
     void updatePatient(long id, Patient patient);
     Patient getPatientById(long id);
     List<Patient> getListPatientsSearch(String keyword);
+    List<Patient> avatarArr(List<Patient> list) throws FileNotFoundException, IOException;
 }

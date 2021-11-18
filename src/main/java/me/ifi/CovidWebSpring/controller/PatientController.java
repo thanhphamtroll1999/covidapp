@@ -3,10 +3,14 @@ package me.ifi.CovidWebSpring.controller;
 import me.ifi.CovidWebSpring.model.Patient;
 import me.ifi.CovidWebSpring.service.impl.PatientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -65,7 +69,7 @@ public class PatientController {
         }
     }
 
-    @PostMapping("/{keyword}")
+    @GetMapping("/patients/search/{keyword}")
     public ResponseEntity<List<Patient>> getListPatientSearch(@PathVariable String keyword){
         try{
             List<Patient> listSearch = patientServiceImpl.getListPatientsSearch(keyword);
@@ -84,4 +88,6 @@ public class PatientController {
 //            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
+
+
 }
