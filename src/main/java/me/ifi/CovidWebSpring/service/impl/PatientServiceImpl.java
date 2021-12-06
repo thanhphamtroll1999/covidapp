@@ -35,7 +35,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public void createNewPatient(Patient patient) {
+    public Patient createNewPatient(Patient patient) {
         File file1 = new File(new SimpleDateFormat("yyyy-mm-dd").format(new Date()) + ".json");
         try (FileWriter file = new FileWriter(file1)) {
             String jsonStr = patient.getAvatar();
@@ -46,10 +46,11 @@ public class PatientServiceImpl implements PatientService {
 
         patient.setAvatar(file1.getAbsolutePath());
         patientRepository.save(patient);
+        return patient;
     }
 
         @Override
-    public void updatePatient(long id, Patient patientUpdate) {
+    public Patient updatePatient(long id, Patient patientUpdate) {
         Patient patient = patientRepository.findPatientById(id);
         if(patient != null){
             patient.setName(patientUpdate.getName());
@@ -61,8 +62,11 @@ public class PatientServiceImpl implements PatientService {
             patient.setDiscoveredDate(patientUpdate.getDiscoveredDate());
             patient.setArea(patientUpdate.getArea());
             patientRepository.save(patient);
-        }else patientRepository.save(patientUpdate);
-
+            return patient;
+        }else {
+            patientRepository.save(patientUpdate);
+            return patientUpdate;
+        }
     }
 
     @Override

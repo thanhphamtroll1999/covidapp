@@ -9,8 +9,8 @@ import java.util.List;
 public interface PatientService {
     List<Patient> getListPatients();
     void deleteSelectedPatient(long id);
-    void createNewPatient(Patient patient);
-    void updatePatient(long id, Patient patient);
+    Patient createNewPatient(Patient patient);
+    Patient updatePatient(long id, Patient patient);
     Patient getPatientById(long id);
     List<Patient> getListPatientsSearch(String keyword);
     List<Patient> avatarArr(List<Patient> list) throws FileNotFoundException, IOException;
